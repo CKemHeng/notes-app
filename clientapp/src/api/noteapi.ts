@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const NoteControllerAPI = '/api/Note';
+const NoteControllerAPI = 'https://heng-noteapi-backend.azurewebsites.net/api/Note';
 
 export interface Note {
   id: number
