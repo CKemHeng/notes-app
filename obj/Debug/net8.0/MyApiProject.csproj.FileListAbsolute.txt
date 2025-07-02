@@ -283,4 +283,3 @@ F:\project Note\note\MyApiProject\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 F:\project Note\note\MyApiProject\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 F:\project Note\note\MyApiProject\obj\Debug\net8.0\staticwebassets.build.json.cache
 F:\project Note\note\MyApiProject\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-F:\project Note\note\MyApiProject\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

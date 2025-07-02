@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/notes-app/' // 👈 important for correct routing on GitHub Pages
+  base: '/notes-app/' 
 })
 
 // export default defineConfig({
