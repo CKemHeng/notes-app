@@ -132,9 +132,9 @@ section::-webkit-scrollbar-thumb {
 
                     
             <div class="mt-2 flex justify-end gap-4">
-                      <p>
-                {{ formatDate(item.updatedAt ?? item.createdAt) }}
-              </p>
+            <p>{{ formatDate(item.updatedAt ?? item.createdAt) }}</p>
+
+
 
 
             </div>

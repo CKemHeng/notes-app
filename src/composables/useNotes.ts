@@ -1,4 +1,8 @@
 import { ref, onMounted } from 'vue'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
 import {
   fetchNotes,
   createNote,
@@ -92,20 +96,28 @@ export function useNotes() {
     form.value.title = ''
     form.value.content = ''
   }
-  function formatDate(dateInput: string | Date) {
-    if (!dateInput) return '';
 
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-    return date.toLocaleString(undefined, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+function formatDate(dateInput: string | Date | null): string {
+  if (!dateInput) return ''
+
+  // If string and no timezone info, append 'Z' (assume UTC)
+  let dateStr = typeof dateInput === 'string' ? dateInput : dateInput.toISOString()
+
+  if (typeof dateInput === 'string' && !dateInput.endsWith('Z') && !dateInput.includes('+')) {
+    dateStr += 'Z' // treat as UTC
   }
 
+  return dayjs(dateStr)
+    .tz('Asia/Phnom_Penh')
+    .format('YYYY-MM-DD hh:mm A')
+}
+
+
+
+  
 
   onMounted(loadNotes)
 
