@@ -6,6 +6,10 @@ const {
   form,
   editingNoteId,
   message,
+  filteredNotes, 
+  searchQuery,
+  filterMode,
+  sortMode,
   addOrUpdateNote,
   removeNote,
   startEdit,
@@ -89,12 +93,46 @@ section::-webkit-scrollbar-thumb {
 
       
       <!-- Notes list on right -->
+
+
+
       <section
+
+      
         class="w-full lg:w-1/2 bg-white border border-gray-300 rounded-xl p-6 overflow-y-auto max-h-[680px]"
       >
+      <input
+      v-model="searchQuery"
+      type="text"
+      placeholder="Search notes..."
+      class="mb-4 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+
+  <div class="flex flex-wrap gap-2 mb-4">
+    <select
+      v-model="filterMode"
+      class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+    >
+      <option value="all">All Notes</option>
+      <option value="hasContent">With Content</option>
+      <option value="emptyContent">Title Only</option>
+    </select>
+
+    <select
+      v-model="sortMode"
+      class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+    >
+      <option value="latest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+      <option value="titleAZ">Title A–Z</option>
+      <option value="titleZA">Title Z–A</option>
+    </select>
+  </div>
+  
+
+    
         <ul class="divide-y divide-gray-200">
           <li
-            v-for="item in notes"
+           v-for="item in filteredNotes"
             :key="item.id"
             class="py-4 cursor-pointer hover:bg-gray-50 transition flex flex-col"
             @click="startEdit(item)"
@@ -142,11 +180,8 @@ section::-webkit-scrollbar-thumb {
           </li>
         </ul>
 
-        <p
-          v-if="notes.length === 0"
-          class="text-center text-gray-400 mt-20 select-none"
-        >
-          No notes available. Add one!
+      <p v-if="filteredNotes.length === 0" class="text-center text-gray-400 mt-20">
+          No matching notes found.
         </p>
       </section>
     </div>

@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -21,6 +21,51 @@ export function useNotes() {
   const form = ref({ title: '', content: '', updateAt: new Date() })
   const editingNoteId = ref<number | null>(null)
   const message = ref('')
+  const searchQuery = ref('')
+  const filterMode = ref<'all' | 'hasContent' | 'emptyContent'>('all')
+  const sortMode = ref<'latest' | 'oldest' | 'titleAZ' | 'titleZA'>('latest')
+
+  const filteredNotes = computed(() => {
+  let result = notes.value
+
+  // Filter: search
+  if (searchQuery.value.trim()) {
+    const q = searchQuery.value.toLowerCase()
+    result = result.filter(n =>
+      n.title.toLowerCase().includes(q) ||
+      n.content?.toLowerCase().includes(q)
+    )
+  }
+
+  // Filter: content existence
+  if (filterMode.value === 'hasContent') {
+    result = result.filter(n => n.content && n.content.trim() !== '')
+  } else if (filterMode.value === 'emptyContent') {
+    result = result.filter(n => !n.content || n.content.trim() === '')
+  }
+
+  // Sort
+  result = [...result] // avoid mutating original array
+  switch (sortMode.value) {
+    case 'latest':
+      result.sort((a, b) => new Date(b.updatedAt ?? b.createdAt).getTime() - new Date(a.updatedAt ?? a.createdAt).getTime())
+      break
+    case 'oldest':
+      result.sort((a, b) => new Date(a.updatedAt ?? a.createdAt).getTime() - new Date(b.updatedAt ?? b.createdAt).getTime())
+      break
+    case 'titleAZ':
+      result.sort((a, b) => a.title.localeCompare(b.title))
+      break
+    case 'titleZA':
+      result.sort((a, b) => b.title.localeCompare(a.title))
+      break
+  }
+
+  return result
+})
+
+
+
 
   async function loadNotes() {
     try {
@@ -97,6 +142,7 @@ export function useNotes() {
     form.value.content = ''
   }
 
+
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -116,7 +162,6 @@ function formatDate(dateInput: string | Date | null): string {
 }
 
 
-
   
 
   onMounted(loadNotes)
@@ -126,10 +171,15 @@ function formatDate(dateInput: string | Date | null): string {
     form,
     editingNoteId,
     message,
+    filteredNotes, 
+    searchQuery,
+    filterMode,
+    sortMode,
     addOrUpdateNote,
     removeNote,
     startEdit,
     cancelEdit,
     formatDate,
+
   }
 }
